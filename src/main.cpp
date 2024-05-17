@@ -54,7 +54,28 @@
 #include <FlexIO_t4.h>
 #include <FlexIOSPI.h>
 
-// Scan Chain Configuration
+// =========== Definitions for 3-bit SPI scan chain bus ===========
+// Chain 0
+#define IMF_SCAN_IN0        10
+#define IMF_SCAN_OUT0       35
+#define IMF_SCAN_CLK_IN     6    // Single clock input for all chains
+#define IMF_SCAN_WRITE_EN0  16
+
+// Chain 1
+#define IMF_SCAN_IN1        9
+#define IMF_SCAN_OUT1       36
+#define IMF_SCAN_WRITE_EN1  17
+
+// Chain 2
+#define IMF_SCAN_IN2        32
+#define IMF_SCAN_OUT2       37
+
+// General Clock and Write Enable (if needed for the entire chain)
+#define IMF_SCAN_CLK_OUT    34   // Single clock output for all chains
+
+
+
+// =========== Scan Chain Configuration ===========
 const int SCAN_CHAIN_LENGTH = 8;
 const int SCAN_IN_PIN = 10;
 const int SCAN_OUT_PIN = 35;
@@ -71,9 +92,12 @@ const bool defaultTestPattern[SCAN_CHAIN_LENGTH] = {0, 0, 0, 0, 1, 1, 1, 0};
 
 // Function prototypes
 void shiftScanChain(bool scanIn);
+
 void captureTestResults();
+
 void updateScanChain();
-void runTestPattern(const bool* pattern, int length, uint32_t speed);
+
+void runTestPattern(const bool *pattern, int length, uint32_t speed);
 
 // Function to shift data into the scan chain
 void shiftScanChain(bool scanIn) {
@@ -101,7 +125,7 @@ void updateScanChain() {
 }
 
 // Run test pattern
-void runTestPattern(const bool* pattern, int length, uint32_t speed) {
+void runTestPattern(const bool *pattern, int length, uint32_t speed) {
     flexIO.beginTransaction(FlexIOSPISettings(speed, MSBFIRST, SPI_MODE0));
     static int patternIndex = 0;
 
